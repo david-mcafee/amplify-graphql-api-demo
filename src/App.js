@@ -17,18 +17,27 @@ const App = () => {
   // const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
-    // Subscribe to creation of Todo
-    const subscription = API.graphql(
-      graphqlOperation(subscriptions.onCreateTodo)
-    ).subscribe({
-      next: ({ provider, value }) => console.log({ provider, value }),
-      error: (error) => console.warn(error),
-    });
+    let subscription;
+    async function todoSubscription() {
+      try {
+        // Subscribe to creation of Todo
+        subscription = API.graphql(
+          graphqlOperation(subscriptions.onCreateTodo)
+        ).subscribe({
+          next: ({ provider, value }) => console.log({ provider, value }),
+          error: (error) => console.warn(error),
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
 
+    todoSubscription();
     // Stop receiving data updates from the subscription
     return subscription.unsubscribe;
   }, []);
 
+  // TODO:
   // useEffect(() => {
   //   let subscription = null;
   //   subscription = API.graphql({
