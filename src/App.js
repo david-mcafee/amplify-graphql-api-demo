@@ -4,6 +4,8 @@ import Amplify, { API, graphqlOperation } from "aws-amplify";
 import { createTodo } from "./graphql/mutations";
 import { listTodos } from "./graphql/queries";
 
+import * as subscriptions from "./graphql/subscriptions";
+
 import awsExports from "./aws-exports";
 Amplify.configure(awsExports);
 
@@ -12,6 +14,19 @@ const initialState = { name: "", description: "" };
 const App = () => {
   const [formState, setFormState] = useState(initialState);
   const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    // Subscribe to creation of Todo
+    const subscription = API.graphql(
+      graphqlOperation(subscriptions.onCreateTodo)
+    ).subscribe({
+      next: ({ provider, value }) => console.log({ provider, value }),
+      error: (error) => console.warn(error),
+    });
+
+    // Stop receiving data updates from the subscription
+    return subscription.unsubscribe;
+  }, []);
 
   useEffect(() => {
     fetchTodos();
