@@ -14,6 +14,7 @@ const initialState = { name: "", description: "" };
 const App = () => {
   const [formState, setFormState] = useState(initialState);
   const [todos, setTodos] = useState([]);
+  // const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     // Subscribe to creation of Todo
@@ -27,6 +28,23 @@ const App = () => {
     // Stop receiving data updates from the subscription
     return subscription.unsubscribe;
   }, []);
+
+  // useEffect(() => {
+  //   let subscription = null;
+  //   subscription = API.graphql({
+  //     query: subscriptions.onAction,
+  //   }).subscribe({
+  //     next: async ({ value }) => {
+  //       /// your code here
+  //     },
+  //     error: (error) => setRefresh(!refresh),
+  //   });
+  //   return () => {
+  //     if (subscription) {
+  //       subscription.unsubscribe();
+  //     }
+  //   };
+  // }, [refresh]);
 
   useEffect(() => {
     fetchTodos();
